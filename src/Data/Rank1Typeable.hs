@@ -110,7 +110,8 @@ import Data.Typeable
   , tyConName
   )
 #if MIN_VERSION_base(4,9,0)
-import Data.Typeable.Internal (tcList, tcFun)
+import Data.Proxy
+import Data.Typeable (typeRepTyCon, typeRep)
 #else
 import Data.Typeable.Internal (listTc, funTc)
 #endif
@@ -123,7 +124,11 @@ import qualified Data.Typeable as Typeable
   )
 
 
-#if !MIN_VERSION_base(4,9,0)
+#if MIN_VERSION_base(4,9,0)
+tcList, tcFun :: TyCon
+tcList = typeRepTyCon $ typeRep (Proxy :: Proxy [Int])
+tcFun  = typeRepTyCon $ typeRep (Proxy :: Proxy (Int -> Int))
+#else
 tcList, tcFun :: TyCon
 tcList = listTc
 tcFun = funTc
